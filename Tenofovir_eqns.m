@@ -1,8 +1,5 @@
 function dydt = Tenofovir_eqns(t,y,p)
-mtfv = 287.2*10^3; %Molecular weight of tenofovir (mg/mol)
-mmp = 367.2*10^3; %Molecular weight of tenofovir monophosphate
-mdp = 447.18*10^3; %Molecular weight of tenofovir diphosphate
-D0=p(1);
+q=p(1);
 V1=p(2); %Volume of central compartment
 V2=p(3); %Volume of peripheral compartment
 Vcell=p(4); %Volume of PBMC compartment
@@ -42,7 +39,7 @@ dydt=zeros(7,1);    % make it a column vector (e.g. (3,1)
 % 7 = clearance???
 
  dTFVin = [(Vmax*fu*(1-F)*y(1))/(Km + fu*(1-F)*y(1))]*((GSHi-GSHe)/GSHe)*(V1/(Vcell*N*Vbl));
- dTFVef = (Vmax*fu*(1-F)*y(3))/(Km + fu*(1-F)*y(3)/(mtfv*Vcell*N*Vbl))*(Vcell*N*Vbl/V1);
+ dTFVef = (Vmax*fu*(1-F)*y(3))/(Km + fu*(1-F)*y(3))*(Vcell*N*Vbl/V1);
  kmp = (kcat1*E1)/(Km1 + y(3));
  kdp = (kcat2*E2)/(Km2 + y(4));
  

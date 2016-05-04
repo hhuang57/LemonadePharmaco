@@ -1,6 +1,10 @@
 function out = Tenofovir(?)
 
-TimeLen = 72; % hours
+TimeLen = 24; % hours
+mtfv = 287.2*10^3; %Molecular weight of tenofovir (mg/mol)
+mmp = 367.2*10^3; %Molecular weight of tenofovir monophosphate
+mdp = 447.18*10^3; %Molecular weight of tenofovir diphosphate
+
 D0 = 300; %mg (oral)
 y0 = [D0/VD 0]'; % mg/kg*L
     % 1 = drug in blood; 2 = drug in degr
