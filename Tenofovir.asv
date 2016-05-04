@@ -1,4 +1,4 @@
-function [outAUC,outBalance,outT,outY] = Tenofovir(p,OutputVar,TimeLen)
+function [outAUC,outT,outY] = Tenofovir(p,OutputVar,TimeLen)
 
 mtfv = 287.2*10^3; %Molecular weight of tenofovir (mg/mol)
 mmp = 367.2*10^3; %Molecular weight of tenofovir monophosphate
@@ -34,10 +34,7 @@ if check > 1.e-6
     fprintf ('*** Molecular Balance Violated ***\n');
 end
 
-outAUC=trapz(T1,Y1(:,OutputVar));
-outT=T1;
-outY=Y1(:,OutputVar);
-outBalance = BalanceD1;
 end
+
 
 
