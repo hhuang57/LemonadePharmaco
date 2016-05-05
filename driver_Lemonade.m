@@ -67,7 +67,7 @@ CL_in=23;
 
 p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
     NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in]';
-%% Run Simulation
+%% Step 2: Run Perfect Adherence Simulation
 dose_set = [75, 150, 300, 600];
 TimeLen = 15*24;
 OutputVar = 1:15;
@@ -109,22 +109,53 @@ title(ax4,'Molecular Balance') %(zero = balance)
 ylabel(ax4,'Balance of Drug (nmol)')
 xlabel(ax4,'time (hrs)')
 legend('75 mg','150 mg','300 mg','600 mg');
-% figure;
-% ax1=subplot(1,3,1);
-% plot(ax1,t,log10(y(:,12)),'linewidth',3)
-% title(ax1,'Number of infected T-cells after proviral genomic integration')
-% ylabel(ax1,'log10 T2')
-% xlabel(ax1,'time (hrs)')
-% 
-% 
-% ax4=subplot(1,3,2);
-% plot(ax4,t,log10(y(:,13)),'linewidth',3)
-% title(ax4,'Number of infected macrophages after proviral genomic integration')
-% ylabel(ax4,'log10 M2')
-% xlabel(ax4,'time (hrs)')
-% 
-% ax4=subplot(1,3,3);
-% plot(ax4,t,log10(-(y(:,14)+y(:,15) - (y0_viral(7)+y0_viral(8)))),'linewidth',3)
-% title(ax4,'Viral Load Decay')
-% ylabel(ax4,'Log10 Viral Load Decay')
-% xlabel(ax4,'time (hrs)')
+figure;
+ax1=subplot(1,3,1);
+plot(ax1,t,log10(y(:,12)),'linewidth',3)
+title(ax1,'Number of infected T-cells after proviral genomic integration')
+ylabel(ax1,'log10 T2')
+xlabel(ax1,'time (hrs)')
+
+
+ax4=subplot(1,3,2);
+plot(ax4,t,log10(y(:,13)),'linewidth',3)
+title(ax4,'Number of infected macrophages after proviral genomic integration')
+ylabel(ax4,'log10 M2')
+xlabel(ax4,'time (hrs)')
+
+ax4=subplot(1,3,3);
+plot(ax4,t,log10(-(y(:,14)+y(:,15) - (y0_viral(7)+y0_viral(8)))),'linewidth',3)
+title(ax4,'Viral Load Decay')
+ylabel(ax4,'Log10 Viral Load Decay')
+xlabel(ax4,'time (hrs)')
+
+%% Step 4: Missed Dose Analysis
+%% Missed Dose
+dose = 300*10^6; %dose in ng, taken orally
+p(1) = dose;
+[outMetric,Balance,t,y] = Tenofovir_missDose(p,p_viral,y0_viral,OutputVar,TimeLen,3);
+AUC = outMetric(1)
+Ctrough = outMetric(2)
+Cmax = outMetric(3)
+figure();
+plot(t,y(:,1)/(V1*10^3),'k','linewidth',3)
+title('Concentration of TFV in Central Compartment') %(zero = balance)
+ylabel('TFV (nmol/mL)')
+xlabel('time (hrs)')
+
+%% Retake Dose
+dose = 300*10^6; %dose in ng, taken orally
+p(1) = dose;
+TimeLen = 8*24;
+figure();
+hold on;
+for i = 1:3
+    [outMetric,Balance,t,y] = Tenofovir_retakeDose(p,p_viral,y0_viral,OutputVar,TimeLen,3,i);
+    plot(t,y(:,1)/(V1*10^3),'linewidth',3)
+    AUC(i) = outMetric(1);
+    Ctrough(i) = outMetric(2);
+    Cmax(i) = outMetric(3);
+end
+title('Concentration of TFV in Central Compartment') %(zero = balance)
+ylabel('TFV (nmol/mL)')
+xlabel('time (hrs)')

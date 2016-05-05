@@ -27,9 +27,48 @@ TotalProD = Y1(:,6);
 DrugOut = Y1(:,7); % cumulative drug eliminated from system
 BalanceD1 = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
 clearvars TotalFreeD;
-for T=24:24:TimeLen
+
+if strcmp(adherence,'full')
+    for T=24:24:TimeLen
+        y0 = Y1(end,:);
+        y0(6) = y0(6) + D0;
+        [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
+        DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
+        TotalFreeD(:,1) = y(:,1);
+        TotalFreeD(:,2) = y(:,2);
+        TotalFreeD(:,3) = y(:,3);
+        TotalDmp = y(:,4);
+        TotalDdp = y(:,5);
+        TotalProD = y(:,6);
+        DrugOut = y(:,7); % cumulative drug eliminated from system
+        balance = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+        BalanceD1 = [BalanceD1; balance];
+        T1 = [T1; t+T];
+        Y1 = [Y1; y];
+        clearvars TotalFreeD;
+    end
+elseif strcmp(adherence,'miss')
+    for T=24:24:(missDose-1)*24
+        y0 = Y1(end,:);
+        y0(6) = y0(6) + D0;
+        [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
+        DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
+        TotalFreeD(:,1) = y(:,1);
+        TotalFreeD(:,2) = y(:,2);
+        TotalFreeD(:,3) = y(:,3);
+        TotalDmp = y(:,4);
+        TotalDdp = y(:,5);
+        TotalProD = y(:,6);
+        DrugOut = y(:,7); % cumulative drug eliminated from system
+        balance = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+        BalanceD1 = [BalanceD1; balance];
+        T1 = [T1; t+T];
+        Y1 = [Y1; y];
+        clearvars TotalFreeD;
+    end
+    % missed Dose
+    T = missDose*24;
     y0 = Y1(end,:);
-    y0(6) = y0(6) + D0;
     [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
     DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
     TotalFreeD(:,1) = y(:,1);
@@ -44,6 +83,78 @@ for T=24:24:TimeLen
     T1 = [T1; t+T];
     Y1 = [Y1; y];
     clearvars TotalFreeD;
+    for T = (missDose+1)*24:24:TimeLen
+                y0 = Y1(end,:);
+        y0(6) = y0(6) + D0;
+        [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
+        DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
+        TotalFreeD(:,1) = y(:,1);
+        TotalFreeD(:,2) = y(:,2);
+        TotalFreeD(:,3) = y(:,3);
+        TotalDmp = y(:,4);
+        TotalDdp = y(:,5);
+        TotalProD = y(:,6);
+        DrugOut = y(:,7); % cumulative drug eliminated from system
+        balance = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+        BalanceD1 = [BalanceD1; balance];
+        T1 = [T1; t+T];
+        Y1 = [Y1; y];
+        clearvars TotalFreeD;
+    end
+elseif strcmp(adherence,'retake')
+     for T=24:24:(missDose-1)*24
+        y0 = Y1(end,:);
+        y0(6) = y0(6) + D0;
+        [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
+        DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
+        TotalFreeD(:,1) = y(:,1);
+        TotalFreeD(:,2) = y(:,2);
+        TotalFreeD(:,3) = y(:,3);
+        TotalDmp = y(:,4);
+        TotalDdp = y(:,5);
+        TotalProD = y(:,6);
+        DrugOut = y(:,7); % cumulative drug eliminated from system
+        balance = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+        BalanceD1 = [BalanceD1; balance];
+        T1 = [T1; t+T];
+        Y1 = [Y1; y];
+        clearvars TotalFreeD;
+    end
+    % missed Dose
+    T = missDose*24;
+    y0 = Y1(end,:);
+    [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
+    DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
+    TotalFreeD(:,1) = y(:,1);
+    TotalFreeD(:,2) = y(:,2);
+    TotalFreeD(:,3) = y(:,3);
+    TotalDmp = y(:,4);
+    TotalDdp = y(:,5);
+    TotalProD = y(:,6);
+    DrugOut = y(:,7); % cumulative drug eliminated from system
+    balance = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+    BalanceD1 = [BalanceD1; balance];
+    T1 = [T1; t+T];
+    Y1 = [Y1; y];
+    clearvars TotalFreeD;
+    for T = (missDose+1)*24:24:TimeLen
+                y0 = Y1(end,:);
+        y0(6) = y0(6) + D0;
+        [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
+        DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
+        TotalFreeD(:,1) = y(:,1);
+        TotalFreeD(:,2) = y(:,2);
+        TotalFreeD(:,3) = y(:,3);
+        TotalDmp = y(:,4);
+        TotalDdp = y(:,5);
+        TotalProD = y(:,6);
+        DrugOut = y(:,7); % cumulative drug eliminated from system
+        balance = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+        BalanceD1 = [BalanceD1; balance];
+        T1 = [T1; t+T];
+        Y1 = [Y1; y];
+        clearvars TotalFreeD;
+    end
 end
 % Include a check on the molecular balance. Don't want to do it visually
 % for 48,000 runs! Instead define a criterion. For example, alert us for
@@ -54,7 +165,7 @@ if check > 1.e-5
     fprintf ('*** Molecular Balance Violated ***\n');
 end
 
-outAUC=trapz(T1,Y1(:,OutputVar));
+outAUC=trapz(T1,Y1(:,5));
 outT=T1;
 outY=Y1(:,OutputVar);
 outBalance = BalanceD1;
