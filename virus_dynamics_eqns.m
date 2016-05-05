@@ -46,6 +46,6 @@ CLM=((1/prev)-1)*betaM;
  dydt(4) = betaM*y(7)*y(2)-(deltaM1+deltaPICM+kM)*y(4);
  dydt(5) = kT*y(3)-deltaT2*y(5);
  dydt(6) = kM*y(4)-deltaM2*y(6);
- dydt(7) = NM*y(6)+NT*y(5)-y(7)*(CL_n+(CLT+betaT)*y(1)+(CLM+betaM)*y(2));
- dydt(8) = ((NhatT-NT)*y(5)+(NhatM-NM)*y(6))-CL_n*y(8);
+ dydt(7) = NM*y(6)+NT*y(5)-y(7)*(CL_in+(CLT+betaT)*y(1)+(CLM+betaM)*y(2));
+ dydt(8) = ((NhatT-NT)*y(5)+(NhatM-NM)*y(6))-CL_in*y(8);
 end

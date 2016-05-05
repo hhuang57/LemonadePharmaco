@@ -7,15 +7,14 @@ D0 = p(1)/mtfv; %nmol (oral)
 V1 = p(2);
 V2 = p(3);
 Vcell = p(4);
-Vbl = p(22);
-N = p(23); %PBMC per L of blood
+Vbl = p(21);
+N = p(22); %PBMC per L of blood
 Vcell2 = Vcell*N*Vbl;
 
 y0 = [0 0 0 0 0 D0 0]'; % moles
 y0 = [y0; y0_viral'];
 p = [p; p_viral];
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-% [T1,Y1] = ode45(@Tenofovir_eqns,[0 TimeLen],y0,options,p);
 [T1,Y1] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
 DrugIn = ones(size(T1))*D0; % cumulative drug into system
 TotalFreeD(:,1) = Y1(:,1);
@@ -84,6 +83,7 @@ BalanceD1 = [BalanceD1; balance];
 T1 = [T1; t+T];
 Y1 = [Y1; y];
 clearvars TotalFreeD;
+%regular dosing
 for T = (missDose+1)*24:24:TimeLen
     y0 = Y1(end,:);
     y0(6) = y0(6) + D0;

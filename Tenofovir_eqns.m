@@ -1,5 +1,5 @@
 function dydt = Tenofovir_eqns(t,y,p)
-p_viral = p(24+1:end);
+p_viral = p(23+1:end);
 y_viral = y(8:end);
 % PK component
 V1=p(2); %Volume of central compartment
@@ -21,10 +21,9 @@ E2 = p(17); %Enzyme concentration for NDA
 GSHi = p(18); %Intracellular GSH concentration
 GSHe = p(19); %Extracellular GSH concentration
 fu = p(20); %unbound fraction of TFV
-F = p(21); %unionized fraction of TFV
-Vbl = p(22);
-N = p(23); %PBMC per L of blood
-kleak = p(24); % Leakage of TFV
+Vbl = p(21);
+N = p(22); %PBMC per L of blood
+kleak = p(23); % Leakage of TFV
 kcl = Cl/V1; %clearance rate of TFV
 k12 = Q/V1; %transfer rate constants from central to peripheral
 k21 = Q/V2; %transfer rate constants from peripheral to central
@@ -74,9 +73,9 @@ deltaM1=p_viral(15);
 deltaM2=p_viral(16);
 CL_n=p_viral(17);
 CL_in=p_viral(18);
-IC50 = 168.4;
+IC50 = p_viral(19);
 prev=0.5;
-reducTerm = IC50/(IC50 + y(5));
+reducTerm = IC50/(IC50 + (y(5)/Vcell2));
 betaT0 = 8*10^-12;
 betaM0 = 10^-14;
 betaT = betaT0*reducTerm;
@@ -85,21 +84,21 @@ CLT = ((1/prev)-reducTerm)*betaT;
 CLM = ((1/prev)-reducTerm)*betaM;
 
 
-% 8: TU: T cells
-% 9: MU: macrophages
-% 10: T1: infected T-cells prior to proviral genomic integration
-% 11: M1: infected macrophages prior to proviral genomic integration
-% 12: T2: infected T-cells after proviral genomic integration
-% 13: M2: infected macrophages after proviral genomic integration
-% 14: VI: free infectious virus
-% 15: VNI: free non-infectious virus
+% 1,8: TU: T cells
+% 2,9: MU: macrophages
+% 3,10: T1: infected T-cells prior to proviral genomic integration
+% 4,11: M1: infected macrophages prior to proviral genomic integration
+% 5,12: T2: infected T-cells after proviral genomic integration
+% 6,13: M2: infected macrophages after proviral genomic integration
+% 7,14: VI: free infectious virus
+% 8,15: VNI: free non-infectious virus
  dydt(8) = gammaT+deltaPICT*y_viral(3)-deltaT*y_viral(1)-betaT*y_viral(7)*y_viral(1);
  dydt(9) = gammaM+deltaPICM*y_viral(4)-deltaM*y_viral(2)-betaM*y_viral(7)*y_viral(2);
  dydt(10) = betaT*y_viral(7)*y_viral(1)-(deltaT1+deltaPICT+kT)*y_viral(3);
  dydt(11) = betaM*y_viral(7)*y_viral(2)-(deltaM1+deltaPICM+kM)*y_viral(4);
  dydt(12) = kT*y_viral(3)-deltaT2*y_viral(5);
  dydt(13) = kM*y_viral(4)-deltaM2*y_viral(6);
- dydt(14) = NM*y_viral(6)+NT*y_viral(5)-y_viral(7)*(CL_n+(CLT+betaT)*y_viral(1)+(CLM+betaM)*y_viral(2));
- dydt(15) = ((NhatT-NT)*y_viral(5)+(NhatM-NM)*y_viral(6))-CL_n*y_viral(8);
+ dydt(14) = NM*y_viral(6)+NT*y_viral(5)-y_viral(7)*(CL_in+(CLT+betaT)*y_viral(1)+(CLM+betaM)*y_viral(2));
+ dydt(15) = ((NhatT-NT)*y_viral(5)+(NhatM-NM)*y_viral(6))-CL_in*y_viral(8);
 end
 
