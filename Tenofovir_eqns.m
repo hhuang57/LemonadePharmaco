@@ -1,5 +1,6 @@
 function dydt = Tenofovir_eqns(t,y,p)
 p_viral = p(24+1:end);
+y_viral = y(8:end);
 % PK component
 V1=p(2); %Volume of central compartment
 V2=p(3); %Volume of peripheral compartment
@@ -82,6 +83,8 @@ betaT = betaT0*reducTerm;
 betaM = betaM0*reducTerm;
 CLT = ((1/prev)-reducTerm)*betaT;
 CLM = ((1/prev)-reducTerm)*betaM;
+
+
 % 8: TU: T cells
 % 9: MU: macrophages
 % 10: T1: infected T-cells prior to proviral genomic integration
@@ -90,13 +93,13 @@ CLM = ((1/prev)-reducTerm)*betaM;
 % 13: M2: infected macrophages after proviral genomic integration
 % 14: VI: free infectious virus
 % 15: VNI: free non-infectious virus
- dydt(8) = gammaT+deltaPICT*y(3)-deltaT*y(1)-betaT*y(7)*y(1);
- dydt(9) = gammaM+deltaPICM*y(4)-deltaM*y(2)-betaM*y(7)*y(2);
- dydt(10) = betaT*y(7)*y(1)-(deltaT1+deltaPICT+kT)*y(3);
- dydt(11) = betaM*y(7)*y(2)-(deltaM1+deltaPICM+kM)*y(4);
- dydt(12) = kT*y(3)-deltaT2*y(5);
- dydt(13) = kM*y(4)-deltaM2*y(6);
- dydt(14) = NM*y(6)+NT*y(5)-y(7)*(CL_n+(CLT+betaT)*y(1)+(CLM+betaM)*y(2));
- dydt(15) = ((NhatT-NT)*y(5)+(NhatM-NM)*y(6))-CL_n*y(8);
+ dydt(8) = gammaT+deltaPICT*y_viral(3)-deltaT*y_viral(1)-betaT*y_viral(7)*y_viral(1);
+ dydt(9) = gammaM+deltaPICM*y_viral(4)-deltaM*y_viral(2)-betaM*y_viral(7)*y_viral(2);
+ dydt(10) = betaT*y_viral(7)*y_viral(1)-(deltaT1+deltaPICT+kT)*y_viral(3);
+ dydt(11) = betaM*y_viral(7)*y_viral(2)-(deltaM1+deltaPICM+kM)*y_viral(4);
+ dydt(12) = kT*y_viral(3)-deltaT2*y_viral(5);
+ dydt(13) = kM*y_viral(4)-deltaM2*y_viral(6);
+ dydt(14) = NM*y_viral(6)+NT*y_viral(5)-y_viral(7)*(CL_n+(CLT+betaT)*y_viral(1)+(CLM+betaM)*y_viral(2));
+ dydt(15) = ((NhatT-NT)*y_viral(5)+(NhatM-NM)*y_viral(6))-CL_n*y_viral(8);
 end
 
