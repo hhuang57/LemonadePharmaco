@@ -21,7 +21,7 @@ GSHe = p(19); %Extracellular GSH concentration
 fu = p(20); %unbound fraction of TFV
 F = p(21); %unionized fraction of TFV
 Vbl = p(22);
-N = p(23); %PBMC per ml of blood
+N = p(23); %PBMC per L of blood
 kleak = p(24); % Leakage of TFV
 kcl = Cl/V1; %clearance rate of TFV
 k12 = Q/V1; %transfer rate constants from central to peripheral
@@ -30,7 +30,7 @@ Vcell2 = Vcell*N*Vbl;
 
 dydt=zeros(7,1);    % make it a column vector (e.g. (3,1)
 
-% Units are in concentration (moles/L)
+% Units are in concentration (nmol/L)
 % 1 = TFV in central compartment
 % 2 = TFV in peripheral compartment
 % 3 = TFV in PBMC
@@ -39,32 +39,18 @@ dydt=zeros(7,1);    % make it a column vector (e.g. (3,1)
 % 6 = TDF in dosing compartment
 % 7 = clearance???
 
- dTFVin = [(Vmax*fu*(1-F)*y(1))/(Km + fu*(1-F)*y(1))]*((GSHi-GSHe)/GSHe)*(V1/Vcell2);
- dTFVef = (Vmax*fu*(1-F)*y(3))/(Km + fu*(1-F)*y(3))*(Vcell2/V1);
- kmp = (kcat1*E1)/(Km1 + y(3));
- kdp = (kcat2*E2)/(Km2 + y(4));
+ dTFVin = [(Vmax*fu*y(1))/(Km + fu*y(1)/V1)]*((GSHi-GSHe)/GSHe);
+ dTFVef = (Vmax*fu*y(3))/(Km + fu*y(3)/Vcell2);
+ kmp = (kcat1*E1)/(Km1 + y(3)/Vcell2);
+ kdp = (kcat2*E2)/(Km2 + y(4)/Vcell2);
  
- dydt(1) = Fbio*ka*y(6) - y(1)*kcl - y(1)*k12 + y(2)*k21*(V2/V1) +...
-     y(3)*kleak*(Vcell2/V1) - dTFVin + dTFVef;
- dydt(2) = y(1)*k12*(V1/V2) - y(2)*k21;
+ dydt(1) = Fbio*ka*y(6) - y(1)*kcl - y(1)*k12 + y(2)*k21 +...
+     y(3)*kleak - dTFVin + dTFVef;
+ dydt(2) = y(1)*k12 - y(2)*k21;
  dydt(3) = - y(3)*kleak + dTFVin - dTFVef - y(3)*kmp;
  dydt(4) = y(3)*kmp - y(4)*kdp;
- dydt(5) = y(4)*kdp - y(4)*kout;
- dydt(6) = -y(6)*ka;
- dydt(7) = y(1)*kcl + y(6)*(1-Fbio)*ka + y(4)*kout*(Vcell2/V1);
- 
-%  dTFVin = [(Vmax*fu*(1-F)*y(1))/(Km + fu*(1-F)*y(1)/(mtfv*V1))]*((GSHi-GSHe)/GSHe);
-%  dTFVef = (Vmax*fu*(1-F)*y(3))/(Km + fu*(1-F)*y(3)/(mtfv*Vcell*N*Vbl));
-%  kmp = (kcat1*E1)/(Km1 + y(3)/(mtfv*Vcell*N*Vbl));
-%  kdp = (kcat2*E2)/(Km2 + y(4)/(mmp*Vcell*N*Vbl));
-%  
-%  dydt(1) = Fbio*ka*y(6) - y(1)*kcl - y(1)*k12 + y(2)*k21 +...
-%      y(3)*kleak - dTFVin + dTFVef;
-%  dydt(2) = y(1)*k12 - y(2)*k21;
-%  dydt(3) = - y(3)*kleak + dTFVin - dTFVef - y(3)*kmp;
-%  dydt(4) = y(3)*kmp - y(4)*kdp;
-%  dydt(5) = y(4)*kdp - y(4)*kout;
-%  dydt(6) = -y(6)*ka;
-%  dydt(7) = y(1)*kcl + y(6)*(1-Fbio)*ka + y(4)*kout
+ dydt(5) = y(4)*kdp - y(5)*kout;
+ dydt(6) = -y(6)*Fbio*ka;
+ dydt(7) = y(1)*kcl + y(5)*kout;
 end
 
