@@ -40,21 +40,21 @@ OutputVar = 1:5;
 [AUC,Balance,t,y] = Tenofovir(p,OutputVar,TimeLen);
 figure;
 ax1=subplot(2,2,1);
-plot(ax1,t,y(:,1)/(V1*10^3),'k',t,y(:,2)/(V2*10^3),'r.','linewidth',3)
-title(ax1,'Concentration of TFV in Compartments')
-ylabel(ax1,'[D] (nmol/mL)')
+plot(ax1,t,y(:,1)/(V1*10^3),'linewidth',3)
+title(ax1,'Concentration of TFV in Central Compartment')
+ylabel(ax1,'TFV (nmol/mL)')
 xlabel(ax1,'time (hrs)')
 
 ax4=subplot(2,2,2);
 plot(ax4,t,y(:,4)/(Vcell2*10^3),'linewidth',3)
 title(ax4,'Concentration of TFV-MP in PBMC') %(zero = balance)
-ylabel(ax4,'[D] (nmol/mL)')
+ylabel(ax4,'TFV-MP (nmol/mL)')
 xlabel(ax4,'time (hrs)')
 
 ax4=subplot(2,2,3);
 plot(ax4,t,y(:,5)/(Vcell2*10^3),'linewidth',3)
 title(ax4,'Concentration of TFV-DP in PBMC') %(zero = balance)
-ylabel(ax4,'[D] (nmol/mL)')
+ylabel(ax4,'TFV-DP (nmol/mL)')
 xlabel(ax4,'time (hrs)')
 
 ax4=subplot(2,2,4);
