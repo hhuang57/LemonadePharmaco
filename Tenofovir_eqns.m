@@ -41,8 +41,8 @@ dydt=zeros(7,1);    % make it a column vector (e.g. (3,1)
 
  dTFVin = [(Vmax*fu*y(1))/(Km + fu*y(1)/V1)]*((GSHi-GSHe)/GSHe);
  dTFVef = (Vmax*fu*y(3))/(Km + fu*y(3)/Vcell2);
- kmp = (kcat1*E1)/(Km1 + y(3)/Vcell2);
- kdp = (kcat2*E2)/(Km2 + y(4)/Vcell2);
+ kmp = (kcat1*E1)/(Km1 + (y(3)/Vcell2));
+ kdp = (kcat2*E2)/(Km2 + (y(4)/Vcell2));
  
  dydt(1) = Fbio*ka*y(6) - y(1)*kcl - y(1)*k12 + y(2)*k21 +...
      y(3)*kleak - dTFVin + dTFVef;

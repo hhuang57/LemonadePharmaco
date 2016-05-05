@@ -19,7 +19,7 @@ kcat2 = 0.12*3600; %Turnover number for NDKA and TFV-MP
 Km1 = 3*10^6; %Michaelis-Menten constant for AK2 and TFV (nM = nmol/L)
 Km2 = 0.29*10^6; %Michaelis-Menten constant for NDKA and TFV-MP (nM)
 Km = 770*10^3; %Michaelis-Menten constant for TFV uptake (nM)
-% Km = 2*10^-4*Km; %Assumed for saturating conditions
+Km = 2*10^-4*Km; %Assumed for saturating conditions
 Vmax = 1.77*10^9/mtfv; %Maximum rate of TFV uptake (nM/h)
 E1 = 56; %Enzyme concentration for hAK2 (nM)
 E2 = 287.7; %Enzyme concentration for NDA
@@ -29,13 +29,12 @@ fu = 0.93; %unbound fraction of TFV
 F = 4.178*10^-5; %unionized fraction of TFV
 Vbl = 5;
 N = 0.9*10^6*10^3; %PBMC per ml of blood (cells/L)
-% kleak = 9.2*10^3; % Leakage of TFV
-kleak = 3.4*10^10; % Leakage of TFV
+kleak = 9.2*10^3; % Leakage of TFV
 Vcell2 = Vcell*N*Vbl;
 p = [dose V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu F Vbl N kleak]';
 
 %% Run Simulation
-TimeLen = 240;
+TimeLen = 100;
 OutputVar = 1:5;
 [AUC,Balance,t,y] = Tenofovir(p,OutputVar,TimeLen);
 figure;
