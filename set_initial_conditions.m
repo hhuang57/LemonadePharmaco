@@ -39,16 +39,36 @@ Initial_T2 = 1.0e6;
 Initial_M  = 2.0e9 + 0.02*2.0e9 - 1.0e6 - 1.0e5;
 Initial_M1 = 1.0e3;
 Initial_M2 = 1.0e4;
-Initial_V  = 17.5e6;
+Initial_VI  = 17.5e6;
 Initial_VNI = 5e6;
 % set pseudo-initial species numbers
-y0 = [Initial_T;Initial_M;Initial_T1;Initial_M1;Initial_T2;Initial_M2;Initial_V1;Initial_VNI];
+y0 = [Initial_T;Initial_M;Initial_T1;Initial_M1;Initial_T2;Initial_M2;Initial_VI;Initial_VNI];
 
 % compute initial species numbers
 TimeLen = T; % hours
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-[T1,Y1] = ode15s(@virus_dynamics_eqns,[0 TimeLen],y0,options,p);
+[t,y] = ode15s(@virus_dynamics_eqns,[0 TimeLen],y0,options,p);
 
 % set initial species vector
-y0 = round(Y1(end,:));
+y0 = round(y(end,:));
+
+figure;
+ax1=subplot(1,3,1);
+plot(ax1,t,y(:,3),'linewidth',3)
+title(ax1,'Number of infected T-cells after proviral genomic integration')
+ylabel(ax1,'T2')
+xlabel(ax1,'time (hrs)')
+
+
+ax4=subplot(1,3,2);
+plot(ax4,t,y(:,4),'linewidth',3)
+title(ax4,'Number of infected macrophages after proviral genomic integration')
+ylabel(ax4,'M2')
+xlabel(ax4,'time (hrs)')
+
+ax4=subplot(1,3,3);
+plot(ax4,t,y(:,7)+y(:,8),'linewidth',3)
+title(ax4,'Viral Load') %(zero = balance)
+ylabel(ax4,'VI + VNI')
+xlabel(ax4,'time (hrs)')
 end

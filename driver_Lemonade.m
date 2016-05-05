@@ -66,11 +66,13 @@ CL_n=2.3; % clearance rate of free virus by the immune system
 CL_in=23;
 
 p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
-    NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in,etaterm];
+    NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in]';
 %% Run Simulation
 TimeLen = 240;
-OutputVar = 1:5;
-[yviral,AUC,Balance,t,y] = Tenofovir(p,p_viral,OutputVar,TimeLen);
+OutputVar = 1:15;
+[AUC,Balance,t,y] = Tenofovir(p,p_viral,OutputVar,TimeLen);
+
+%% Plot Figures
 figure;
 ax1=subplot(2,2,1);
 plot(ax1,t,y(:,1)/(V1*10^3),'linewidth',3)
@@ -94,4 +96,24 @@ ax4=subplot(2,2,4);
 plot(ax4,t,Balance,'k','linewidth',3)
 title(ax4,'Molecular Balance') %(zero = balance)
 ylabel(ax4,'Balance of Drug (nmol)')
+xlabel(ax4,'time (hrs)')
+
+figure;
+ax1=subplot(1,3,1);
+plot(ax1,t,y(:,12),'linewidth',3)
+title(ax1,'Number of infected T-cells after proviral genomic integration')
+ylabel(ax1,'T2')
+xlabel(ax1,'time (hrs)')
+
+
+ax4=subplot(1,3,2);
+plot(ax4,t,y(:,13),'linewidth',3)
+title(ax4,'Number of infected macrophages after proviral genomic integration')
+ylabel(ax4,'M2')
+xlabel(ax4,'time (hrs)')
+
+ax4=subplot(1,3,3);
+plot(ax4,t,y(:,14)+y(:,15),'linewidth',3)
+title(ax4,'Viral Load') %(zero = balance)
+ylabel(ax4,'VI + VNI')
 xlabel(ax4,'time (hrs)')

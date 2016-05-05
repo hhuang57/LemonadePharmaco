@@ -13,9 +13,9 @@ Vcell2 = Vcell*N*Vbl;
 
 % y0 = [0 0 0 0 0 D0/V1 0]'; % moles/L
 y0 = [0 0 0 0 0 D0 0]'; % moles 
-y0_viral = set_initial_conditions(24);
-y0 = [y0 y0_viral];
-p = [p p_viral];
+y0_viral = set_initial_conditions(400);
+y0 = [y0; y0_viral'];
+p = [p; p_viral];
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
 % [T1,Y1] = ode45(@Tenofovir_eqns,[0 TimeLen],y0,options,p);
 [T1,Y1] = ode23s(@Tenofovir_eqns,[0 TimeLen],y0,options,p);
