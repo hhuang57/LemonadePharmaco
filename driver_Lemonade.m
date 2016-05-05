@@ -2,7 +2,7 @@
 clear all;
 close all;
 
-%% Initialize Values
+%% Initialize PK parameters
 mtfv = 287.2; %Molecular weight of tenofovir (g/mol)
 
 dose = 300*10^6; %dose in ng, taken orally
@@ -34,10 +34,43 @@ kleak = 3.4*10^10; % Leakage of TFV
 Vcell2 = Vcell*N*Vbl;
 p = [dose V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu F Vbl N kleak]';
 
+%% Initialize PD parameters: Viral Dynamics
+gammaT=2e9; % birth rate of uninfected T-cells, 1/day
+gammaM=6.9e7; % birth rate of uninfected macrophages, 1/dzy
+deltaT=0.02; % death rate of uninfected T-cells, 1/day
+deltaM=0.0069; % death rate of uninfected macrophages
+
+% intracellular degradation of essential components of the pre-integration 
+% complex, e.g., by the host cell proteasome, which return early infected 
+% T-cells and macrophages to an uninfected stage, respectively
+deltaPICT=0.35;
+deltaPICM=0.0035;
+
+% rate constants of proviral integration into the host cell’s genome
+kT=0.35;
+kM=0.07; 
+
+% total number of released infectious and non-infectious 
+NhatT=1000;
+NhatM=100;
+% virus from late infected T-cells and macrophages
+% rates of release of infectious virus
+NT=0.67*NhatT;
+NM=0.67*NhatM;
+% death rate constants of T1, T2, M1,M2
+deltaT1=deltaT;
+deltaT2=1;
+deltaM1=deltaM;
+deltaM2=0.09; 
+CL_n=2.3; % clearance rate of free virus by the immune system
+CL_in=23;
+
+p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
+    NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in,etaterm];
 %% Run Simulation
 TimeLen = 240;
 OutputVar = 1:5;
-[AUC,Balance,t,y] = Tenofovir(p,OutputVar,TimeLen);
+[yviral,AUC,Balance,t,y] = Tenofovir(p,p_viral,OutputVar,TimeLen);
 figure;
 ax1=subplot(2,2,1);
 plot(ax1,t,y(:,1)/(V1*10^3),'linewidth',3)

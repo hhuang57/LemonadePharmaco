@@ -30,12 +30,12 @@ deltaM2=0.09;
 CL_n=2.3; % clearance rate of free virus by the immune system
 CL_in=23;
 
-y0=  ;
+y0 = set_initial_conditions(24);
 p=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
     NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in,etaterm];
 TimeLen = 24; % hours
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-[T1,Y1] = ode45(@virus_dynamics_eqns,[0 TimeLen],y0,options,p);
+[T1,Y1] = ode15s(@virus_dynamics_eqns,[0 TimeLen],y0,options,p);
 end
 
 

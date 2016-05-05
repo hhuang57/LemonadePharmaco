@@ -1,5 +1,6 @@
 function dydt = Tenofovir_eqns(t,y,p)
-
+p_viral = p(24+1:end);
+% PK component
 V1=p(2); %Volume of central compartment
 V2=p(3); %Volume of peripheral compartment
 Vcell=p(4); %Volume of PBMC compartment
@@ -28,7 +29,7 @@ k12 = Q/V1; %transfer rate constants from central to peripheral
 k21 = Q/V2; %transfer rate constants from peripheral to central
 Vcell2 = Vcell*N*Vbl;
 
-dydt=zeros(7,1);    % make it a column vector (e.g. (3,1)
+dydt=zeros(7+8,1);    % make it a column vector (e.g. (3,1)
 
 % Units are in concentration (nmol/L)
 % 1 = TFV in central compartment
@@ -52,5 +53,50 @@ dydt=zeros(7,1);    % make it a column vector (e.g. (3,1)
  dydt(5) = y(4)*kdp - y(5)*kout;
  dydt(6) = -y(6)*Fbio*ka;
  dydt(7) = y(1)*kcl + y(5)*kout;
+ 
+% PD component
+gammaT=p_viral(1);
+gammaM=p_viral(2);
+deltaT=p_viral(3);
+deltaM=p_viral(4);
+deltaPICT=p_viral(5);
+deltaPICM=p_viral(6);
+kT=p_viral(7);
+kM=p_viral(8);
+NhatT=p_viral(9);
+NhatM=p_viral(10);
+NT=p_viral(11);
+NM=p_viral(12);
+deltaT1=p_viral(13);
+deltaT2=p_viral(14);
+deltaM1=p_viral(15);
+deltaM2=p_viral(16);
+CL_n=p_viral(17);
+CL_in=p_viral(18);
+IC50 = 168.4;
+prev=0.5;
+reducTerm = IC50/(IC50 + y(5));
+betaT0 = 8*10^-12;
+betaM0 = 10^-14;
+betaT = betaT0*reducTerm;
+betaM = betaM0*reducTerm;
+CLT = ((1/prev)-reducTerm)*betaT;
+CLM = ((1/prev)-reducTerm)*betaM;
+% 8: TU: T cells
+% 9: MU: macrophages
+% 10: T1: infected T-cells prior to proviral genomic integration
+% 11: M1: infected macrophages prior to proviral genomic integration
+% 12: T2: infected T-cells after proviral genomic integration
+% 13: M2: infected macrophages after proviral genomic integration
+% 14: VI: free infectious virus
+% 15: VNI: free non-infectious virus
+ dydt(8) = gammaT+deltaPICT*y(3)-deltaT*y(1)-betaT*y(7)*y(1);
+ dydt(9) = gammaM+deltaPICM*y(4)-deltaM*y(2)-betaM*y(7)*y(2);
+ dydt(10) = betaT*y(7)*y(1)-(deltaT1+deltaPICT+kT)*y(3);
+ dydt(11) = betaM*y(7)*y(2)-(deltaM1+deltaPICM+kM)*y(4);
+ dydt(12) = kT*y(3)-deltaT2*y(5);
+ dydt(13) = kM*y(4)-deltaM2*y(6);
+ dydt(14) = NM*y(6)+NT*y(5)-y(7)*(CL_n+(CLT+betaT)*y(1)+(CLM+betaM)*y(2));
+ dydt(15) = ((NhatT-NT)*y(5)+(NhatM-NM)*y(6))-CL_n*y(8);
 end
 

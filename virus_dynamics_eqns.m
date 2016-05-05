@@ -18,7 +18,7 @@ deltaM1=p(15);
 deltaM2=p(16);
 CL_n=p(17);
 CL_in=p(18);
-etaterm=p(19);
+
 
 dydt=zeros(8,1);    % make it a column vector
 
@@ -32,12 +32,13 @@ dydt=zeros(8,1);    % make it a column vector
 % VI: free infectious virus
 % VNI: free non-infectious virus
 
-beta=beta(etaterm);
-CL=CL(etaterm);
-betaT=beta(1);
-betaM=beta(2);
-CLT=CL(1);
-CLM=CL(2);
+% beta=func_beta(etaterm);
+% CL=func_CL(etaterm);
+betaT=8*10^-12;
+betaM=10^-14;
+prev = 0.5;
+CLT=((1/prev)-1)*betaT;
+CLM=((1/prev)-1)*betaM;
  
  dydt(1) = gammaT+deltaPICT*y(3)-deltaT*y(1)-betaT*y(7)*y(1);
  dydt(2) = gammaM+deltaPICM*y(4)-deltaM*y(2)-betaM*y(7)*y(2);
