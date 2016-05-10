@@ -141,9 +141,9 @@ title(ax4,'M1')
 ylabel(ax4,'M1')
 xlabel(ax4,'time (hrs)')
 
-VD_virus = [50*3.1 + 9.6]/1000; % Volume of Distribution converted to mL
+VD_virus = 50*3.1 + 9.6; % Volume of Distribution
 ax4=subplot(2,3,6);
-semilogy(ax4,t,2*(y(:,14)+y(:,15))/VD_virus,'linewidth',3)
+semilogy(ax4,t,2*(y(:,14)+y(:,15))/(VD_virus*1000),'linewidth',3)
 title(ax4,'Viral Load')
 ylabel(ax4,'# of HIV-1 RNA copies/mL')
 xlabel(ax4,'time (hrs)')
