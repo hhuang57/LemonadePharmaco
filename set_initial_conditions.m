@@ -50,7 +50,7 @@ options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e
 [t,y] = ode15s(@virus_dynamics_eqns,[0 TimeLen],y0,options,p);
 
 % set initial species vector
-y0 = round(y(end,:))
+y0 = round(y(end,:));
 
 figure;
 ax1=subplot(1,3,1);

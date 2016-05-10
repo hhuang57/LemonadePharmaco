@@ -44,20 +44,17 @@ for T=24:24:TimeLen
     BalanceD1 = [BalanceD1; balance];
     T1 = [T1; t+T];
     Y1 = [Y1; y];
-    
-    % Include a check on the molecular balance. Don't want to do it visually
-    % for 48,000 runs! Instead define a criterion. For example, alert us for
-    % any mismatch by more than 1 molecule in a million (10^-6)
-    check = max(max(balance));
-    % fprintf ('Molecular Balance = %2.1e\n',check);
-    if check > 1.e-5
-        fprintf ('*** Molecular Balance Violated ***\n');
-    end
-    
     clearvars TotalFreeD;
 end
 
-
+% Include a check on the molecular balance. Don't want to do it visually
+% for 48,000 runs! Instead define a criterion. For example, alert us for
+% any mismatch by more than 1 molecule in a million (10^-6)
+check = max(max(BalanceD1));
+% fprintf ('Molecular Balance = %2.1e\n',check);
+if check > 1.e-6
+    fprintf ('*** Molecular Balance Violated ***\n');
+end
 outAUC=trapz(T1,Y1(:,5));
 outT=T1;
 outY=Y1(:,OutputVar);
