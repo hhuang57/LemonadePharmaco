@@ -75,14 +75,13 @@ CL_n=p_viral(17);
 CL_in=p_viral(18);
 IC50 = p_viral(19);
 prev=0.5;
-reducTerm = IC50/(IC50 + (y(5)/Vcell2));
+reducTerm = IC50/(IC50 + (y(5)/Vcell2)); % 1 - n(t)
 betaT0 = 8*10^-12;
 betaM0 = 10^-14;
 betaT = betaT0*reducTerm;
 betaM = betaM0*reducTerm;
 CLT = ((1/prev)-reducTerm)*betaT;
 CLM = ((1/prev)-reducTerm)*betaM;
-
 
 % 1,8: TU: T cells
 % 2,9: MU: macrophages
@@ -92,13 +91,14 @@ CLM = ((1/prev)-reducTerm)*betaM;
 % 6,13: M2: infected macrophages after proviral genomic integration
 % 7,14: VI: free infectious virus
 % 8,15: VNI: free non-infectious virus
- dydt(8) = gammaT+deltaPICT*y_viral(3)-deltaT*y_viral(1)-betaT*y_viral(7)*y_viral(1);
- dydt(9) = gammaM+deltaPICM*y_viral(4)-deltaM*y_viral(2)-betaM*y_viral(7)*y_viral(2);
- dydt(10) = betaT*y_viral(7)*y_viral(1)-(deltaT1+deltaPICT+kT)*y_viral(3);
- dydt(11) = betaM*y_viral(7)*y_viral(2)-(deltaM1+deltaPICM+kM)*y_viral(4);
- dydt(12) = kT*y_viral(3)-deltaT2*y_viral(5);
- dydt(13) = kM*y_viral(4)-deltaM2*y_viral(6);
- dydt(14) = NM*y_viral(6)+NT*y_viral(5)-y_viral(7)*(CL_in+(CLT+betaT)*y_viral(1)+(CLM+betaM)*y_viral(2));
- dydt(15) = ((NhatT-NT)*y_viral(5)+(NhatM-NM)*y_viral(6))-CL_in*y_viral(8);
+ dydt(1+7) = gammaT+deltaPICT*y_viral(3)-deltaT*y_viral(1)-betaT*y_viral(7)*y_viral(1);
+ dydt(2+7) = gammaM+deltaPICM*y_viral(4)-deltaM*y_viral(2)-betaM*y_viral(7)*y_viral(2);
+ dydt(3+7) = betaT*y_viral(7)*y_viral(1)-(deltaT1+deltaPICT+kT)*y_viral(3);
+ dydt(4+7) = betaM*y_viral(7)*y_viral(2)-(deltaM1+deltaPICM+kM)*y_viral(4);
+ dydt(5+7) = kT*y_viral(3)-deltaT2*y_viral(5);
+ dydt(6+7) = kM*y_viral(4)-deltaM2*y_viral(6);
+ dydt(7+7) = NM*y_viral(6)+NT*y_viral(5)-y_viral(7)*(CL_in+(CLT+betaT)*y_viral(1)+(CLM+betaM)*y_viral(2));
+ dydt(8+7) = ((NhatT-NT)*y_viral(5)+(NhatM-NM)*y_viral(6))-CL_in*y_viral(8);
+
 end
 

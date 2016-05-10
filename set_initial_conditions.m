@@ -1,7 +1,7 @@
 % compute and return initial conditions of the system:
 function y0 = set_initial_conditions(T)
-gammaT=2e9/24; % birth rate of uninfected T-cells,1/day to 1/hour
-gammaM=6.9e7/24; % birth rate of uninfected macrophages, 1/day to 1/hour
+gammaT=(2*10^9)/24; % birth rate of uninfected T-cells,1/day to 1/hour
+gammaM=(6.9*10^7)/24; % birth rate of uninfected macrophages, 1/day to 1/hour
 deltaT=0.02/24; % death rate of uninfected T-cells and T1, 1/day to 1/hour
 deltaM=0.0069/24; % death rate of uninfected macrophages and M1
 

@@ -34,8 +34,8 @@ Vcell2 = Vcell*N*Vbl;
 p = [0 V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu Vbl N kleak]';
 
 %% Initialize PD parameters: Viral Dynamics
-gammaT=2e9/24; % birth rate of uninfected T-cells,1/day to 1/hour
-gammaM=6.9e7/24; % birth rate of uninfected macrophages, 1/day to 1/hour
+gammaT=(2*10^9)/24; % birth rate of uninfected T-cells,1/day to 1/hour
+gammaM=(6.9*10^7)/24; % birth rate of uninfected macrophages, 1/day to 1/hour
 deltaT=0.02/24; % death rate of uninfected T-cells and T1, 1/day to 1/hour
 deltaM=0.0069/24; % death rate of uninfected macrophages and M1
 
@@ -63,7 +63,7 @@ deltaM1=deltaM;
 deltaM2=0.09/24;
 CL_n=2.3/24; % clearance rate of free virus in uninfected individuals
 CL_in=23/24; % clearance rate of free virus in infected individuals
-IC_50 = 0.1*10^3; %nmol, range from literature is 0.04 - 8.5 umol/L
+IC_50 = 0.001*10^3; %nmol/L, range from literature is 0.04 - 8.5 umol/L
 p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
     NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in IC_50]';
 %% Step 2: Run Perfect Adherence Simulation
@@ -71,7 +71,7 @@ dose_set = [75, 150, 300, 600];
 TimeLen = 15*24;
 OutputVar = 1:15;
 y0_viral = set_initial_conditions(1500);
-% y0_viral = [2e11,1e3,1e2,3e10,1e3,1e3,2,1];
+% y0_viral = [2e11,3e10,400,400,100,100,2000,2000];
 for i = 1:4
     dose = dose_set(i)*10^6; %dose in ng, taken orally
     p(1) = dose;
@@ -112,41 +112,49 @@ legend('75 mg','150 mg','300 mg','600 mg');
 
 figure;
 ax1=subplot(2,3,1);
-plot(ax1,t,log10(y(:,12)),'linewidth',3)
-title(ax1,'Number of infected T-cells after proviral genomic integration')
+semilogy(ax1,t,y(:,12),'linewidth',3)
+title(ax1,'T2')
 ylabel(ax1,'log10 T2')
 xlabel(ax1,'time (hrs)')
 
 ax1=subplot(2,3,2);
-plot(ax1,t,log10(y(:,8)),'linewidth',3)
-title(ax1,'Number of uninfected T-cells after proviral genomic integration')
-ylabel(ax1,'log10 Tu')
-xlabel(ax1,'time (hrs)')
-
-ax1=subplot(2,3,3);
-plot(ax1,t,log10(y(:,10)),'linewidth',3)
-title(ax1,'Number of 1 T-cells after proviral genomic integration')
+semilogy(ax1,t,y(:,10),'linewidth',3)
+title(ax1,'T1')
 ylabel(ax1,'log10 T1')
 xlabel(ax1,'time (hrs)')
 
+ax1=subplot(2,3,3);
+semilogy(ax1,t,y(:,8),'linewidth',3)
+title(ax1,'Tu')
+ylabel(ax1,'log10 Tu')
+xlabel(ax1,'time (hrs)')
+
 ax4=subplot(2,3,4);
-plot(ax4,t,log10(y(:,13)),'linewidth',3)
-title(ax4,'Number of infected macrophages after proviral genomic integration')
+semilogy(ax4,t,y(:,13),'linewidth',3)
+title(ax4,'M2')
 ylabel(ax4,'log10 M2')
 xlabel(ax4,'time (hrs)')
 
 ax4=subplot(2,3,5);
-plot(ax4,t,log10(y(:,9)),'linewidth',3)
-title(ax4,'Number of uninfected macrophages after proviral genomic integration')
-ylabel(ax4,'log10 M')
+semilogy(ax4,t,y(:,11),'linewidth',3)
+title(ax4,'M1')
+ylabel(ax4,'log10 M1')
 xlabel(ax4,'time (hrs)')
 
 VD_virus = 50*3.1 + 9.6;
 ax4=subplot(2,3,6);
-plot(ax4,t,log10((y(:,14)+y(:,15)/(VD_virus*1000))/((y0_viral(7)+y0_viral(8))/(VD_virus*1000))),'linewidth',3)
-title(ax4,'Viral Load Decay')
-ylabel(ax4,'Log10 Viral Load Decay')
+semilogy(ax4,t,y(:,14),'linewidth',3)
+title(ax4,'V1')
+ylabel(ax4,'Log10 V1')
 xlabel(ax4,'time (hrs)')
+
+
+% VD_virus = 50*3.1 + 9.6;
+% ax4=subplot(2,3,6);
+% plot(ax4,t,log10((y(:,14)+y(:,15)/(VD_virus*1000))/((y0_viral(7)+y0_viral(8))/(VD_virus*1000))),'linewidth',3)
+% title(ax4,'Viral Load Decay')
+% ylabel(ax4,'Log10 Viral Load Decay')
+% xlabel(ax4,'time (hrs)')
 
 % %% Step 4: Missed Dose Analysis
 % %% Missed Dose

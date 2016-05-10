@@ -25,6 +25,7 @@ TotalDdp = Y1(:,5);
 TotalProD = Y1(:,6);
 DrugOut = Y1(:,7); % cumulative drug eliminated from system
 BalanceD1 = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+BalanceD1 = BalanceD1/max(DrugIn);
 clearvars TotalFreeD;
 for T=24:24:TimeLen
     y0 = Y1(end,:);
@@ -39,21 +40,23 @@ for T=24:24:TimeLen
     TotalProD = y(:,6);
     DrugOut = y(:,7); % cumulative drug eliminated from system
     balance = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
+    balance = balance/max(DrugIn);
     BalanceD1 = [BalanceD1; balance];
     T1 = [T1; t+T];
     Y1 = [Y1; y];
+    
+    % Include a check on the molecular balance. Don't want to do it visually
+    % for 48,000 runs! Instead define a criterion. For example, alert us for
+    % any mismatch by more than 1 molecule in a million (10^-6)
+    check = max(max(balance));
+    % fprintf ('Molecular Balance = %2.1e\n',check);
+    if check > 1.e-5
+        fprintf ('*** Molecular Balance Violated ***\n');
+    end
+    
     clearvars TotalFreeD;
 end
 
-
-% Include a check on the molecular balance. Don't want to do it visually
-% for 48,000 runs! Instead define a criterion. For example, alert us for
-% any mismatch by more than 1 molecule in a million (10^-6)
-check = max(max(BalanceD1))/(D0/V1);
-% fprintf ('Molecular Balance = %2.1e\n',check);
-if check > 1.e-5
-    fprintf ('*** Molecular Balance Violated ***\n');
-end
 
 outAUC=trapz(T1,Y1(:,5));
 outT=T1;
