@@ -1,7 +1,7 @@
 %% Initialize PK parameters
 mtfv = 287.2; %Molecular weight of tenofovir (g/mol)
 OutputVar = 1:5;
-TimeLen=120;
+TimeLen=240;
 V1= 244; %Volume of central compartment (L)
 V2= 464.54; %Volume of peripheral compartment (L)
 Vcell= 0.28*10^-12; %Volume of PBMC compartment
@@ -89,15 +89,16 @@ for p4=1:npeople
 end
 
 figure;
+axx1=subplot(2,2,1);
 hist(info(1,:));
 title('Age Distribution');
-figure;
+axx2=subplot(2,2,2);
 hist(info(2,:));
 title('Weight Distribution');
-figure;
+axx3=subplot(2,2,3);
 hist(info(3,:));
 title('SCR Distribution');
-figure;
+axx4=subplot(2,2,4);
 hist(info(4,:));
 title('kout Distribution');
 %% popPK for this population
@@ -141,38 +142,89 @@ boxplot(aucall');
 ylabel('AUC of TFV-DP (hr-nmol/L)');
 % title('Varying ka');
 % xlabel('AUC of TFV (hr-nmol/L)');
-%%
-aucall=zeros(3,npeople);
-for scenario=1:3
-    figure;   
-    for i=1:npeople
-        switch scenario
-            case 1 %clearance depends on ratio of BW over scr
-                BW = BWstdev.*randn(1,1) + BWmean;
-                scr=scrstdev.*randn(1,1)+scrmean;
-                Cl=Fbio*(number+136*BW/scr);
-                kout=koutmean;
+%% cmax cmin
+cminall=zeros(4,npeople);
+cmaxall=zeros(4,npeople);
+for sc=1:4
+    for dum=1:npeople
+        switch sc
+            case 1
+                ka= exp(-info(1,npeople)/50);
+                Cl=29.28;
+                kout = 0.0144375;
                 p = [dose V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu F Vbl N kleak]';
-                [outAUC,outBalance,outT,outY] = Tenofovir(p,OutputVar,TimeLen); 
-                aucall(scenario,i)=outAUC(1);    
-            case 2 %interindividual variability for kout
-                Cl=29.28;%Fbio*(number+136*BWmean/scrmean);
-                kout=koutstdev.*randn(1,1)+koutmean;
+                [outAUC,outBalance,outT,outY] = Tenofovir_multipledose(p,OutputVar,TimeLen); 
+%                 plot(outT,outY);
+%                 title('Dosing Every 24 Hours for 10 Days: Case 1');
+%                 xlabel('Time (hr)');
+%                 ylabel('TFV in Central Compartment (nmol/L)');
+                cmin=min(outY(end-100:end));
+                cmax=max(outY(end-100:end));
+                cminall(sc,dum)=cmin;
+                cmaxall(sc,dum)=cmax;
+            case 2
+                ka=1;
+                Cl=Fbio*(number+136*info(2,dum)/info(3,dum));
+                kout = 0.0144375;
                 p = [dose V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu F Vbl N kleak]';
-                [outAUC,outBalance,outT,outY] = Tenofovir(p,OutputVar,TimeLen); 
-                aucall(scenario,i)=outAUC(1);   
-%             case 3 %ka on age
-%                 ka=
-            case 3 %everything
-                BW = BWstdev.*randn(1,1) + BWmean;
-                scr=scrstdev.*randn(1,1)+scrmean;
-                Cl=Fbio*(number+136*BW/scr);
-                kout=koutstdev.*randn(1,1)+koutmean;
+                [outAUC,outBalance,outT,outY] = Tenofovir_multipledose(p,OutputVar,TimeLen); 
+%                 plot(outT,outY);
+%                 title('Dosing Every 24 Hours for 10 Days: Case 2');
+%                 xlabel('Time (hr)');
+%                 ylabel('TFV in Central Compartment (nmol/L)');
+                cmin=min(outY(end-100:end));
+                cmax=max(outY(end-100:end));
+                cminall(sc,dum)=cmin;
+                cmaxall(sc,dum)=cmax;
+            case 3
+                ka=1;
+                Cl=29.28;
+                kout=info(4,dum);
                 p = [dose V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu F Vbl N kleak]';
-                [outAUC,outBalance,outT,outY] = Tenofovir(p,OutputVar,TimeLen); 
-                aucall(scenario,i)=outAUC(1);    
+                [outAUC,outBalance,outT,outY] = Tenofovir_multipledose(p,OutputVar,TimeLen); 
+%                 plot(outT,outY);
+%                 title('Dosing Every 24 Hours for 10 Days: Case 3');
+%                 xlabel('Time (hr)');
+%                 ylabel('TFV in Central Compartment (nmol/L)');
+                cmin=min(outY(end-100:end));
+                cmax=max(outY(end-100:end));
+                cminall(sc,dum)=cmin;
+                cmaxall(sc,dum)=cmax;
+            case 4
+                ka= exp(-info(1,npeople)/120);
+                Cl=Fbio*(number+136*info(2,dum)/info(3,dum));
+                kout=info(4,dum);
+                p = [dose V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu F Vbl N kleak]';
+                [outAUC,outBalance,outT,outY] = Tenofovir_multipledose(p,OutputVar,TimeLen); 
+%                 plot(outT,outY);
+%                 title('Dosing Every 24 Hours for 10 Days: Case 4');
+%                 xlabel('Time (hr)');
+%                 ylabel('TFV in Central Compartment (nmol/L)');
+                cmin=min(outY(end-100:end));
+                cmax=max(outY(end-100:end));
+                cminall(sc,dum)=cmin;
+                cmaxall(sc,dum)=cmax;
         end
     end
-    aucalls=aucall(scenario,:)*287.2*1e-6/244; %h*mg/L
-    hist(aucalls);
 end
+%%
+figure;
+ax1=subplot(2,2,1);
+hist(cmaxall(1,:));
+title(ax1,'Cmax: Case 1')
+xlabel(ax1,'TFV (nmol/L)')
+
+ax1=subplot(2,2,2);
+hist(cmaxall(2,:));
+title(ax1,'Cmax: Case 2')
+xlabel(ax1,'TFV (nmol/L)')
+
+ax1=subplot(2,2,3);
+hist(cmaxall(3,:));
+title(ax1,'Cmax: Case 3')
+xlabel(ax1,'TFV (nmol/L)')
+
+ax1=subplot(2,2,4);
+hist(cmaxall(4,:));
+title(ax1,'Cmax: Case 4')
+xlabel(ax1,'TFV (nmol/L)')
