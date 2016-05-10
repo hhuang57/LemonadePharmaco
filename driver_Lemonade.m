@@ -114,38 +114,38 @@ figure;
 ax1=subplot(2,3,1);
 semilogy(ax1,t,y(:,12),'linewidth',3)
 title(ax1,'T2')
-ylabel(ax1,'log10 T2')
+ylabel(ax1,'T2')
 xlabel(ax1,'time (hrs)')
 
 ax1=subplot(2,3,2);
 semilogy(ax1,t,y(:,10),'linewidth',3)
 title(ax1,'T1')
-ylabel(ax1,'log10 T1')
+ylabel(ax1,'T1')
 xlabel(ax1,'time (hrs)')
 
 ax1=subplot(2,3,3);
 semilogy(ax1,t,y(:,8),'linewidth',3)
 title(ax1,'Tu')
-ylabel(ax1,'log10 Tu')
+ylabel(ax1,'Tu')
 xlabel(ax1,'time (hrs)')
 
 ax4=subplot(2,3,4);
 semilogy(ax4,t,y(:,13),'linewidth',3)
 title(ax4,'M2')
-ylabel(ax4,'log10 M2')
+ylabel(ax4,'M2')
 xlabel(ax4,'time (hrs)')
 
 ax4=subplot(2,3,5);
 semilogy(ax4,t,y(:,11),'linewidth',3)
 title(ax4,'M1')
-ylabel(ax4,'log10 M1')
+ylabel(ax4,'M1')
 xlabel(ax4,'time (hrs)')
 
-VD_virus = 50*3.1 + 9.6;
+VD_virus = [50*3.1 + 9.6]/1000; % Volume of Distribution converted to mL
 ax4=subplot(2,3,6);
-semilogy(ax4,t,y(:,14),'linewidth',3)
-title(ax4,'V1')
-ylabel(ax4,'Log10 V1')
+semilogy(ax4,t,2*(y(:,14)+y(:,15))/VD_virus,'linewidth',3)
+title(ax4,'Viral Load')
+ylabel(ax4,'# of HIV-1 RNA copies/mL')
 xlabel(ax4,'time (hrs)')
 
 
