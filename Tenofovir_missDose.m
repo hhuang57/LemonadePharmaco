@@ -10,27 +10,13 @@ Vcell = p(4);
 Vbl = p(21);
 N = p(22); %PBMC per L of blood
 Vcell2 = Vcell*N*Vbl;
-
+VD_virus = p_viral(20);
 y0 = [0 0 0 0 0 D0 0]'; % moles
 y0 = [y0; y0_viral'];
 p = [p; p_viral];
-options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-[T1,Y1] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
-DrugIn = ones(size(T1))*D0; % cumulative drug into system
-TotalFreeD(:,1) = Y1(:,1);
-TotalFreeD(:,2) = Y1(:,2);
-TotalFreeD(:,3) = Y1(:,3);
-TotalDmp = Y1(:,4);
-TotalDdp = Y1(:,5);
-TotalProD = Y1(:,6);
-DrugOut = Y1(:,7); % cumulative drug eliminated from system
-BalanceD1 = DrugIn - DrugOut - TotalProD - TotalFreeD(:,1) - TotalFreeD(:,2) - TotalFreeD(:,3) - TotalDmp - TotalDdp; %(zero = balance)
-BalanceD1 = BalanceD1/max(DrugIn);
-clearvars TotalFreeD;
+T1 = []; Y1 = []; BalanceD1 = [];
 
-
-
-for T=24:24:(missDose-1)*24
+for T=0:24:(missDose-1)*24
     y0 = Y1(end,:);
     y0(6) = y0(6) + D0;
     [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
@@ -96,10 +82,11 @@ if check > 1.e-6
     fprintf ('*** Molecular Balance Violated ***\n');
 end
 
-AUC=trapz(T1,Y1(:,1));
-Ctrough = min(Y1(:,1));
-Cmax = max(Y1(:,1));
-outMetric = [AUC, Ctrough, Cmax];
+outAUC=trapz(T1,Y1(:,5)); % AUC of TFV-DP
+Ctrough = min(Y1(T1 > (TimeLen - 48),5));
+Cmax = max(Y1(T1 > (TimeLen - 48),5));
+virLoad = 2*(Y1(end,14)+Y1(end,15))/(VD_virus*1000);
+outMetric = [outAUC Ctrough Cmax virLoad];
 outT=T1;
 outY=Y1(:,OutputVar);
 outBalance = BalanceD1;

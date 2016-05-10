@@ -91,6 +91,7 @@ CLM = ((1/prev)-reducTerm)*betaM;
 % 6,13: M2: infected macrophages after proviral genomic integration
 % 7,14: VI: free infectious virus
 % 8,15: VNI: free non-infectious virus
+
  dydt(1+7) = gammaT+deltaPICT*y_viral(3)-deltaT*y_viral(1)-betaT*y_viral(7)*y_viral(1);
  dydt(2+7) = gammaM+deltaPICM*y_viral(4)-deltaM*y_viral(2)-betaM*y_viral(7)*y_viral(2);
  dydt(3+7) = betaT*y_viral(7)*y_viral(1)-(deltaT1+deltaPICT+kT)*y_viral(3);

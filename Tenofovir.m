@@ -1,4 +1,4 @@
-function [outAUC,outBalance,outT,outY] = Tenofovir(p,p_viral,y0_viral,OutputVar,TimeLen)
+function [outMetric,outBalance,outT,outY] = Tenofovir(p,p_viral,y0_viral,OutputVar,TimeLen)
 
 mtfv = 287.2; %Molecular weight of tenofovir (g/mol)
 mmp = 367.2; %Molecular weight of tenofovir monophosphate
@@ -10,7 +10,7 @@ Vcell = p(4);
 Vbl = p(21);
 N = p(22); %PBMC per L of blood
 Vcell2 = Vcell*N*Vbl;
-
+VD_virus = p_viral(20);
 y0 = [0 0 0 0 0 D0 0]'; % moles
 y0 = [y0; y0_viral'];
 p = [p; p_viral];
@@ -55,7 +55,11 @@ check = max(max(BalanceD1));
 if check > 1.e-6
     fprintf ('*** Molecular Balance Violated ***\n');
 end
-outAUC=trapz(T1,Y1(:,5));
+outAUC=trapz(T1,Y1(:,5)); % AUC of TFV-DP
+Ctrough = min(Y1(T1 > (TimeLen - 48),5));
+Cmax = max(Y1(T1 > (TimeLen - 48),5));
+virLoad = 2*(Y1(end,14)+Y1(end,15))/(VD_virus*1000);
+outMetric = [outAUC Ctrough Cmax virLoad];
 outT=T1;
 outY=Y1(:,OutputVar);
 outBalance = BalanceD1;

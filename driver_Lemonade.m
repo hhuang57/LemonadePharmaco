@@ -59,12 +59,21 @@ deltaM1=deltaM;
 deltaM2=0.09/24;
 CL_n=2.3/24; % clearance rate of free virus in uninfected individuals
 CL_in=23/24; % clearance rate of free virus in infected individuals
-IC_50 = 0.001*10^3; %nmol/L, range from literature is 0.04 - 8.5 umol/L
+IC_50 = 0.001*10^3; %nmol/L, range from literature is 0.04 - 8.5 umol/L, assumed smaller value in model
+VD_virus = 50*3.1 + 9.6; % Volume of Distribution
 p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
-    NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in IC_50]';
+    NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in IC_50 VD_virus]';
 
 % Initialize Tu,Mu,T1,M1,T2,M2,VI,VNI
 y0_viral = set_initial_conditions(1500);
 
 %% Part 2: Analyze PK/PD Model with Full Adherence
 run('driver_part2.m');
+
+%% Part 2: Run Sensitivity Analysis
+
+%% Part 3: Run Population PK/PD
+
+
+%% Part 4: Run Missed Dose Analysis
+run('driver_part4.m');

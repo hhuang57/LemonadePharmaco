@@ -51,24 +51,24 @@ options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e
 
 % set initial species vector
 y0 = round(y(end,:));
-
-figure;
-ax1=subplot(1,3,1);
-plot(ax1,t,y(:,5),'linewidth',3)
-title(ax1,'Number of infected T-cells after proviral genomic integration')
-ylabel(ax1,'T2')
-xlabel(ax1,'time (hrs)')
-
-
-ax4=subplot(1,3,2);
-plot(ax4,t,y(:,6),'linewidth',3)
-title(ax4,'Number of infected macrophages after proviral genomic integration')
-ylabel(ax4,'M2')
-xlabel(ax4,'time (hrs)')
-
-ax4=subplot(1,3,3);
-plot(ax4,t,y(:,7)+y(:,8),'linewidth',3)
-title(ax4,'Viral Load') %(zero = balance)
-ylabel(ax4,'VI + VNI')
-xlabel(ax4,'time (hrs)')
+% 
+% figure;
+% ax1=subplot(1,3,1);
+% plot(ax1,t,y(:,5),'linewidth',3)
+% title(ax1,'Number of infected T-cells after proviral genomic integration')
+% ylabel(ax1,'T2')
+% xlabel(ax1,'time (hrs)')
+% 
+% 
+% ax4=subplot(1,3,2);
+% plot(ax4,t,y(:,6),'linewidth',3)
+% title(ax4,'Number of infected macrophages after proviral genomic integration')
+% ylabel(ax4,'M2')
+% xlabel(ax4,'time (hrs)')
+% 
+% ax4=subplot(1,3,3);
+% plot(ax4,t,y(:,7)+y(:,8),'linewidth',3)
+% title(ax4,'Viral Load') %(zero = balance)
+% ylabel(ax4,'VI + VNI')
+% xlabel(ax4,'time (hrs)')
 end
