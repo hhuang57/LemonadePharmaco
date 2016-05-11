@@ -80,8 +80,8 @@ betaT0 = 8*10^-12;
 betaM0 = 10^-14;
 betaT = betaT0*reducTerm;
 betaM = betaM0*reducTerm;
-CLT = ((1/prev)-reducTerm)*betaT;
-CLM = ((1/prev)-reducTerm)*betaM;
+CLT = ((1/prev)-reducTerm)*betaT0;
+CLM = ((1/prev)-reducTerm)*betaM0;
 
 % 1,8: TU: T cells
 % 2,9: MU: macrophages

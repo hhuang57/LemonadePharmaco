@@ -53,14 +53,15 @@ NhatM=100/24;
 NT=0.67*NhatT;
 NM=0.67*NhatM;
 % death rate constants of T1, T2, M1,M2
-deltaT1=0.5/24;
-deltaT2=1.4/24;
+deltaT1=0.02/24;
+deltaT2=1/24;
 deltaM1=deltaM;
 deltaM2=0.09/24;
 CL_n=2.3/24; % clearance rate of free virus in uninfected individuals
 CL_in=23/24; % clearance rate of free virus in infected individuals
-IC_50 = 0.001*10^3; %nmol/L, range from literature is 0.04 - 8.5 umol/L, assumed smaller value in model
+IC_50 = 0.004*10^3; %nmol/L, range from literature is 0.04 - 8.5 umol/L, assumed smaller value in model
 VD_virus = 50*3.1 + 9.6; % Volume of Distribution
+
 p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
     NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in IC_50 VD_virus]';
 
