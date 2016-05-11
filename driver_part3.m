@@ -87,6 +87,7 @@ dose_set = [75, 150, 300, 600]*10^6; % Dose in mg converted to ng
 TimeLen = 15*24;
 OutputVar = 1:15;
 p(1) = dose_set(2);
+p(6)= median(exp(-info(1,:)/100)); % in order to fit our assumption, can't use ka=1
 [metric0,~,~,~] = Tenofovir(p,p_viral,y0_viral,OutputVar,TimeLen);
 
 auc = zeros(5,npeople); %base line, vary ka, vary cl, vary kout, vary cl
@@ -103,7 +104,7 @@ for sc=1:4
         switch sc
             case 1
                 p1=p;
-                p1(6)= exp(-info(1,dum)/50);
+                p1(6)= exp(-info(1,dum)/100);
                 [output,Balance,t,y] = Tenofovir(p1,p_viral,y0_viral,OutputVar,TimeLen); 
                 auc(2,dum)=output(1);
                 ctro(2,dum)=output(2);
@@ -112,7 +113,7 @@ for sc=1:4
                 
             case 2
                 p2=p;
-                p2(8)=Fbio*(number+136*info(2,dum)/info(3,dum));
+                p2(8)=Fbio*(number+136/3*info(2,dum)./info(3,dum)); %added /3 to account for discrepancy in lit values
                 [output,Balance,t,y] = Tenofovir(p2,p_viral,y0_viral,OutputVar,TimeLen); 
                 auc(3,dum)=output(1);
                 ctro(3,dum)=output(2);
