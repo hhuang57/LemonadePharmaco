@@ -4,7 +4,7 @@
 mtfv = 287.2; %Molecular weight of tenofovir (g/mol)
 V1= 244; %Volume of central compartment (L)
 V2= 464.54; %Volume of peripheral compartment (L)
-Vcell= 0.28*10^-12; %Volume of PBMC compartment
+Vcell= 0.28*10^-12; %Volume of PBMC compartment (pL to L)
 Fbio = 0.32; %Bioavailability of tenofovir
 ka = 1; %Absorption constant (1/h)
 Q = 71.41; %Intercompartment clearance (L/h)
@@ -24,8 +24,9 @@ GSHe = 20*10^3; %Extracellular GSH concentration (nM)
 fu = 0.93; %unbound fraction of TFV
 Vbl = 5;
 N = 0.9*10^6*10^3; %PBMC per ml of blood (cells/L)
-% kleak = 9.2*10^3; % Leakage of TFV from literature
-kleak = 3.4*10^10; % Leakage of TFV, assumed in the model
+kleak = 9.2*10^3; % Leakage of TFV from literature
+kleak = 1*10^7; % Leakage of TFV, assumed in the model
+% kleak = 3.4*10^10; % Leakage of TFV, assumed in the model saturation
 Vcell2 = Vcell*N*Vbl;
 p = [0 V1 V2 Vcell Fbio ka Q Cl kout kcat1 kcat2 Km1 Km2 Km Vmax E1 E2 GSHi GSHe fu Vbl N kleak]';
 
@@ -59,9 +60,8 @@ deltaM1=deltaM;
 deltaM2=0.09/24;
 CL_n=2.3/24; % clearance rate of free virus in uninfected individuals
 CL_in=23/24; % clearance rate of free virus in infected individuals
-IC_50 = 0.004*10^3; %nmol/L, range from literature is 0.04 - 8.5 umol/L, assumed smaller value in model
+IC_50 = 1*10^3; %nmol/L, range from literature is 0.04 - 8.5 umol/L, assumed smaller value in model OR 0.2-0.6 uM or 0.55 to 2.2 uM
 VD_virus = 50*3.1 + 9.6; % Volume of Distribution
-
 p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
     NhatM, NT,NM,deltaT1,deltaT2,deltaM1,deltaM2,CL_n,CL_in IC_50 VD_virus]';
 
@@ -77,4 +77,4 @@ run('driver_part2.m');
 
 
 %% Part 4: Run Missed Dose Analysis
-run('driver_part4.m');
+% run('driver_part4.m');
