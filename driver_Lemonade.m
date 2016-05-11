@@ -72,9 +72,11 @@ y0_viral = set_initial_conditions(1500);
 run('driver_part2.m');
 
 %% Part 2: Run Sensitivity Analysis
+% also in driver_part2.m
+
 
 %% Part 3: Run Population PK/PD
-
+% run('driver_part3.m');
 
 %% Part 4: Run Missed Dose Analysis
 % run('driver_part4.m');
