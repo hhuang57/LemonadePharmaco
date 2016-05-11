@@ -11,13 +11,13 @@ Vbl = p(21);
 N = p(22); %PBMC per L of blood
 Vcell2 = Vcell*N*Vbl;
 VD_virus = p_viral(20);
-y0 = [0 0 0 0 0 D0 0]'; % moles
+y0 = [0 0 0 0 0 0 0]'; % moles
 y0 = [y0; y0_viral'];
 p = [p; p_viral];
 T1 = []; Y1 = []; BalanceD1 = [];
+options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
 
 for T=0:24:(missDose-1)*24
-    y0 = Y1(end,:);
     y0(6) = y0(6) + D0;
     [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
     DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
@@ -33,13 +33,14 @@ for T=0:24:(missDose-1)*24
     BalanceD1 = [BalanceD1; balance];
     T1 = [T1; t+T];
     Y1 = [Y1; y];
+    y0 = Y1(end,:);
     clearvars TotalFreeD;
 end
 % missed Dose
 T = missDose*24;
 y0 = Y1(end,:);
 [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
-DrugIn = DrugIn; % cumulative drug into system
+DrugIn = ones(size(t))*max(DrugIn); % cumulative drug into system
 TotalFreeD(:,1) = y(:,1);
 TotalFreeD(:,2) = y(:,2);
 TotalFreeD(:,3) = y(:,3);
@@ -57,7 +58,7 @@ for T = (missDose+1)*24:24:TimeLen
     y0 = Y1(end,:);
     y0(6) = y0(6) + D0;
     [t,y] = ode23s(@Tenofovir_eqns,[0 24],y0,options,p);
-    DrugIn = ones(size(t))*(T/24 + 1)*D0; % cumulative drug into system
+    DrugIn = ones(size(t))*(max(DrugIn) + D0); % cumulative drug into system
     TotalFreeD(:,1) = y(:,1);
     TotalFreeD(:,2) = y(:,2);
     TotalFreeD(:,3) = y(:,3);

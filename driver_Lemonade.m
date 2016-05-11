@@ -1,4 +1,6 @@
 % MAIN DRIVER
+clear all;
+close all;
 %% Initialize Parameters
 % PK Parameters
 mtfv = 287.2; %Molecular weight of tenofovir (g/mol)
@@ -69,14 +71,14 @@ p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
 y0_viral = set_initial_conditions(1500);
 
 %% Part 2: Analyze PK/PD Model with Full Adherence
-run('driver_part2.m');
+% run('driver_part2.m');
 
 %% Part 2: Run Sensitivity Analysis
-% also in driver_part2.m
+% run('driver_sensitivity.m');
 
 
 %% Part 3: Run Population PK/PD
 % run('driver_part3.m');
 
 %% Part 4: Run Missed Dose Analysis
-% run('driver_part4.m');
+run('driver_part4.m');
