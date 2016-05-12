@@ -19,7 +19,7 @@ icmean=(ub+lb)/2;
 icstdev=(ub-lb)/6; % ub and lb both 3 stdev away from the mean
 
 
-npeople=10; %100
+npeople=100; %100
 info=zeros(4,npeople); %age,weight,scr,IC50
 
 for p1=1:npeople
@@ -149,3 +149,5 @@ boxplot(vload');
 title('Viral Load');
 ylabel('# of HIV-1 RNA copies/mL');
 set(gca,'xticklabel',specs,'XTick', 1:1:5);
+
+save driver32.mat popparam metric0 auc ctro cmax vload info;

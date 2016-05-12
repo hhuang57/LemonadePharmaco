@@ -5,7 +5,7 @@ library(gridExtra)
 library(ggplot2)
 library(reshape)
 
-# Problem 1 Part b: Artesunate Concentrations Over Time
+
 Data <- readMat("data/diffdose.mat", header=T) # Loading in simulated data
 df <- as.data.frame(Data) # convert to dataframe
 df <- rename(df,c('out.1' = 'Dose.1', 'out.2' = 'Dose.2', 'out.3' = 'Dose.3', 'out.4' = 'Dose.4'))
