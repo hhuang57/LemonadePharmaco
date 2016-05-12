@@ -78,7 +78,7 @@ OutputVar = 1:15;
 
 
 %% Part 3: Run Population PK/PD
-run('driver_part3_2.m');
+% run('driver_part3_2.m');
 
 %% Part 4: Run Missed Dose Analysis
-% run('driver_part4.m');
+run('driver_part4.m');
