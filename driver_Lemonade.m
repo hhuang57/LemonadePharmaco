@@ -69,12 +69,12 @@ p_viral=[gammaT, gammaM, deltaT, deltaM, deltaPICT, deltaPICM, kT, kM, NhatT,...
 
 % Initialize Tu,Mu,T1,M1,T2,M2,VI,VNI
 y0_viral = set_initial_conditions(1500);
-
+OutputVar = 1:15;
 %% Part 2: Analyze PK/PD Model with Full Adherence
-% run('driver_part2.m');
+run('driver_part2.m');
 
 %% Part 2: Run Sensitivity Analysis
-% run('driver_sensitivity.m');
+run('driver_sensitivity.m');
 
 
 %% Part 3: Run Population PK/PD

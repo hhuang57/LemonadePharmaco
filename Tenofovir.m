@@ -56,8 +56,11 @@ if check > 1.e-6
     fprintf ('*** Molecular Balance Violated ***\n');
 end
 outAUC=trapz(T1,Y1(:,5)/(Vcell2*10^3)); % AUC of TFV-DP
-Ctrough = min(Y1(T1 > (TimeLen - 48),5)/(Vcell2*10^3));
-Cmax = max(Y1(T1 > (TimeLen - 48),5)/(Vcell2*10^3));
+% DataInv = 1.01*max(Y1(:,5)) - Y1(:,5);
+% [~,MinIdx] = findpeaks(DataInv);
+% Ctrough = min(Y1(MinIdx,5))/(Vcell2*10^3);
+Ctrough = min(Y1(T1 > (TimeLen - 24*5),5)/(Vcell2*10^3));
+Cmax = max(Y1(:,5)/(Vcell2*10^3));
 virLoad = 2*(Y1(end,14)+Y1(end,15))/(VD_virus*1000);
 outMetric = [outAUC Ctrough Cmax virLoad];
 outT=T1;
