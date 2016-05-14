@@ -24,7 +24,7 @@ end
 figure();
 ax1=subplot(2,2,1);
 hist(metric_missDose(1,:));
-hline = line([metric(1,3),metric(1,3)],ylim);
+hline = line([normal_missDose(1),normal_missDose(1)],ylim);
 set(hline,'Color','r');
 title(ax1,'AUC of TFV-DP for 11th Missed Dose')
 ylabel(ax1,'Incidence')
@@ -32,7 +32,7 @@ xlabel(ax1,'AUC of TFV-DP (nmol*hr/mL)');
 
 ax2=subplot(2,2,2);
 hist(metric_missDose(2,:))
-hline = line([metric(2,3),metric(2,3)],ylim);
+hline = line([normal_missDose(2),normal_missDose(2)],ylim);
 set(hline,'Color','r');
 title(ax2,'Ctrough of TFV-DP for 11th Missed Dose') %(zero = balance)
 ylabel(ax2,'Incidence')
@@ -40,7 +40,7 @@ xlabel(ax2,'Ctrough of TFV-DP (nmol/mL)')
 
 ax3 = subplot(2,2,3);
 hist(metric_missDose(3,:))
-hline = line([metric(3,3),metric(3,3)],ylim);
+hline = line([normal_missDose(3),normal_missDose(3)],ylim);
 set(hline,'Color','r');
 title(ax3,'Cmax of TFV-DP for 11th Missed dose')
 ylabel(ax3,'Incidence')
@@ -48,7 +48,7 @@ xlabel(ax3,'Cmax of TF-DP (nmol/L)')
 
 ax4=subplot(2,2,4);
 hist(metric_missDose(4,:))
-hline = line([metric(4,3),metric(4,3)],ylim);
+hline = line([normal_missDose(4),normal_missDose(4)],ylim);
 set(hline,'Color','r');
 title(ax4,'Steady State Viral Load for 11th Missed Dose') %(zero = balance)
 ylabel(ax4,'Incidence')
@@ -95,7 +95,7 @@ scatter((11+1/10):1/10:(12-1/10),  metric_retakeDose(3,:));
 hline = refline(0,metric(3,3));
 set(hline,'Color','r');
 title(ax3,'Cmax of TFV-DP for Retaken Dose')
-ylabel(ax3,'Cmax of TF-DP (nmol/L)')
+ylabel(ax3,'Cmax of TF-DP (nmol/mL)')
 xlabel(ax3,'Retook Dose at Time (days)')
 
 ax4=subplot(2,2,4);
